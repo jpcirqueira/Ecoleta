@@ -1,13 +1,11 @@
 import express, { response } from 'express';
+import routes from './routes';
+
 
 const app = express();
+app.use(express.json());
 
-app.get('/', (request, response) => {
-    //alert('listagem')
+app.use(routes);
 
-    response.json([
-        'inicio',
-    ]);
-});
 
 app.listen(3333); 
