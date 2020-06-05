@@ -51,6 +51,8 @@ const CreatePoint = () => {
     email: '',
     whatsapp: '',
     });
+    const [selectedItems, setSelectedItems] = useState<number[]>([]);
+
 
     useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -112,6 +114,19 @@ const CreatePoint = () => {
 
     setFormData({ ...formData, [name]: value });
     }
+
+    function handleSelectItem(id: number) {
+        const alreadySelected = selectedItems.findIndex((item) => item === id);
+    
+        if (alreadySelected >= 0) {
+          const filteredItems = selectedItems.filter((item) => item !== id);
+    
+          setSelectedItems(filteredItems);
+        } else {
+          setSelectedItems([...selectedItems, id]);
+        }
+      }
+
 
     return (
         <div id="page-create-point">
@@ -229,6 +244,8 @@ const CreatePoint = () => {
             {items.map((item) => (
                 <li
                     key={item.id}
+                    className={selectedItems.includes(item.id) ? 'selected' : ''}
+                    onClick={() => handleSelectItem(item.id)}
                 >
                     <img src={item.image_url} alt={item.title} />
                     <span>{item.title}</span>
