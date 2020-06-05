@@ -1,5 +1,5 @@
-import React,{useEffect, useState, ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
+import React,{useEffect, useState, ChangeEvent, FormEvent } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
 import logo from '../../assets/logo.svg';
 import { FiArrowLeft } from 'react-icons/fi';
@@ -28,6 +28,7 @@ interface IBGECityResponse {
 
 const CreatePoint = () => {
 
+    const history = useHistory();
 
     const [items, setItems] = useState<Item[]>([]);
     const [ufs, setUfs] = useState<string[]>([]);
@@ -115,6 +116,33 @@ const CreatePoint = () => {
     setFormData({ ...formData, [name]: value });
     }
 
+    async function handleSubmit(event: FormEvent) {
+        event.preventDefault();
+    
+        const { name, email, whatsapp } = formData;
+        const uf = selectedUf;
+        const city = selectedCity;
+        const [latitude, longitude] = selectedPosition;
+        const items = selectedItems;
+    
+        const data = {
+          name,
+          email,
+          whatsapp,
+          uf,
+          city,
+          latitude,
+          longitude,
+          items,
+        };
+    
+        await api.post('points', data);
+    
+        alert('Ponto de coleta criado');
+    
+        history.push('/');
+      }
+
     function handleSelectItem(id: number) {
         const alreadySelected = selectedItems.findIndex((item) => item === id);
     
@@ -139,7 +167,7 @@ const CreatePoint = () => {
             </Link>
         </header>
 
-        <form >
+        <form onSubmit={handleSubmit} autoComplete="off">
             <h1>
             Cadastro do <br />
             ponto de coleta
